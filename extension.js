@@ -1,70 +1,49 @@
-console.log("Extension.js loaded");
-
-browser.runtime.onMessage.addListener(async (message, sender) => {
-    console.log("Message received in background script:", message);  // Log the received message
-
+browser.runtime.onMessage.addListener(async (message) => {
     if (message.action === "downloadHtml") {
-        console.log("Download HTML action triggered");
-        await downloadHtml(message.tabId);
+        const html = await browser.tabs.executeScript(message.tabId, {
+            code: "document.documentElement.outerHTML",
+        });
+        const title = await browser.tabs.executeScript(message.tabId, {
+            code: "document.title || 'page'",
+        });
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const fileName = `${title[0]}_${timestamp}.html`;
+
+        const blob = new Blob([html[0]], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+
+        browser.downloads.download({
+            url,
+            filename: fileName,
+            saveAs: true,
+        });
     } else if (message.action === "sendHtml") {
-        console.log("Send HTML action triggered");
-        await sendHtmlToServer(message.tabId);
+        const html = await browser.tabs.executeScript(message.tabId, {
+            code: "document.documentElement.outerHTML",
+        });
+        const pageUrl = await browser.tabs.executeScript(message.tabId, {
+            code: "window.location.href",
+        });
+
+        // Prepare the data to send
+        const formData = new FormData();
+        formData.append("html_content", html[0]);
+        formData.append("page_url", pageUrl[0]);
+
+        try {
+            const response = await fetch(message.serverUrl, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log("Successfully sent HTML to server:", result);
+        } catch (error) {
+            console.error("Error sending HTML to server:", error);
+        }
     }
 });
-
-async function downloadHtml(tabId) {
-    console.log("Downloading HTML for tab:", tabId);
-
-    // Get the HTML content of the active tab
-    const [htmlContent] = await browser.tabs.executeScript(tabId, {
-        code: "document.documentElement.outerHTML",
-    });
-
-    // Get the page title and generate a timestamp
-    const [pageTitle] = await browser.tabs.executeScript(tabId, {
-        code: "document.title",
-    });
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-
-    // Ensure the filename is safe (remove characters that aren't allowed in filenames)
-    const safeTitle = pageTitle.replace(/[<>:"/\\|?*]/g, '');
-
-    // Create the filename by combining the page title and the timestamp
-    const fileName = `${safeTitle}_${timestamp}.html`;
-
-    // Create a Blob from the HTML content
-    const blob = new Blob([htmlContent], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-
-    // Download the HTML content
-    browser.downloads.download({
-        url,
-        filename: fileName,
-        saveAs: true,
-    });
-
-    console.log("HTML content downloaded successfully as:", fileName);
-}
-
-async function sendHtmlToServer(tabId) {
-    console.log("Sending HTML to server for tab:", tabId);
-    const htmlContent = await browser.tabs.executeScript(tabId, {
-        code: "document.documentElement.outerHTML",
-    });
-
-    const data = new FormData();
-    data.append("html_content", htmlContent[0]);
-
-    fetch("https://cwa.braingia.org/htmlsaver/", {
-        method: "POST",
-        body: data,
-    })
-        .then((response) => response.json())
-        .then((serverResponse) => {
-            console.log("HTML content successfully sent to server:", serverResponse);
-        })
-        .catch((error) => {
-            console.error("Error sending HTML content to server:", error);
-        });
-}

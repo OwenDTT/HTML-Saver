@@ -1,24 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Saver</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
       padding: 10px;
-      min-width: 200px;
+      width: 350px; /* Adjusted width for better input field fit */
+      font-family: Arial, sans-serif;
     }
+
+    input {
+      width: calc(100% - 20px); /* Leave space for padding */
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
     button {
       width: 100%;
-      margin-bottom: 10px;
       padding: 10px;
-      font-size: 14px;
+      margin: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
+  <input id="serverUrl" type="text" placeholder="Enter server URL here" />
   <button id="downloadHtml">Download HTML</button>
   <button id="sendHtml">Send HTML to Server</button>
-  <script src="popup.js"></script> <!-- This file will handle button actions -->
+  <script src="popup.js"></script>
 </body>
 </html>
