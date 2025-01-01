@@ -1,6 +1,5 @@
 # HTML-Saver
 Firefox extension to send files to a database on a server and download it to your computer.
-NOTE: in extension.js you will have to put your own url with a mysql or mariadb database there. I will not provide one or the documentation to setup a database.
 If you have any icon suggestions feel free to email at owendtt@owenwilliam.org.
 To install in firefox follow these instructions.
 1. Go to "about:debugging" in firefox without quotes
