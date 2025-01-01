@@ -9,20 +9,30 @@ document.getElementById("downloadHtml").addEventListener("click", async () => {
 document.getElementById("sendHtml").addEventListener("click", async () => {
     console.log("Send HTML to Server button clicked");
 
-    // Get the server URL from the input field
-    const serverUrl = document.getElementById("serverUrl").value.trim();
+    const serverUrlInput = document.getElementById("serverUrl").value.trim();
+
+    let serverUrl = serverUrlInput;
+    if (!serverUrlInput) {
+        // Get the default URL from storage
+        const result = await browser.storage.local.get("defaultUrl");
+        serverUrl = result.defaultUrl || "";
+    }
+
     if (!serverUrl) {
         alert("Please enter a valid server URL.");
-        return; // Exit if the input is empty
+        return; // Exit if no URL is available
     }
 
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     browser.runtime.sendMessage({
         action: "sendHtml",
         tabId: tab.id,
-        serverUrl, // Pass the server URL to the background script
+        serverUrl, // Use the input or default URL
     });
 
-    // Close the popup after the button is clicked
     window.close();
+});
+
+document.getElementById("settingsBtn").addEventListener("click", () => {
+    browser.runtime.openOptionsPage();
 });

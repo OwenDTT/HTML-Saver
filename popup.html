@@ -8,12 +8,12 @@
     body {
       margin: 0;
       padding: 10px;
-      width: 350px; /* Adjusted width for better input field fit */
+      width: 350px;
       font-family: Arial, sans-serif;
     }
 
     input {
-      width: calc(100% - 20px); /* Leave space for padding */
+      width: calc(100% - 20px);
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
@@ -37,12 +37,21 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    #settingsBtn {
+      background-color: #6c757d;
+    }
+
+    #settingsBtn:hover {
+      background-color: #5a6268;
+    }
   </style>
 </head>
 <body>
-  <input id="serverUrl" type="text" placeholder="Enter server URL here" />
+  <input id="serverUrl" type="text" placeholder="Enter server URL here (optional)" />
   <button id="downloadHtml">Download HTML</button>
   <button id="sendHtml">Send HTML to Server</button>
+  <button id="settingsBtn">Settings</button>
   <script src="popup.js"></script>
 </body>
 </html>

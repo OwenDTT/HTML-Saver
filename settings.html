@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .tab {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      margin-right: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .tab.active {
+      background-color: white;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .tab-content {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      box-sizing: border-box;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    label {
+      margin-right: 10px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active" data-tab="default-url">Default URL</div>
+    <div class="tab" data-tab="basic-settings">Basic Settings</div>
+  </div>
+
+  <div class="container">
+    <!-- Default URL Tab -->
+    <div class="tab-content active" id="default-url">
+      <label for="defaultUrl">Default Server URL:</label>
+      <input id="defaultUrl" type="text" placeholder="Enter default server URL" />
+      <button id="saveSettings">Save</button>
+    </div>
+
+    <!-- Basic Settings Tab -->
+    <div class="tab-content" id="basic-settings">
+      <label for="sendToServer">Send every website to the server:</label>
+      <div class="checkbox-container">
+        <input type="checkbox" id="sendToServer" />
+      </div>
+      <button id="saveBasicSettings">Save</button>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
